@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charSet="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Jmeter，jmeter-graph大文件分析利器详解</title>
+    <meta name="keywords"
+        content="1核1g服务器怎么配置环境,1核1g服务器配windows什么系统,1核1g服务器配windows什么系统好,1核2g服务器 windows,2核2g内存服务器,32g 内存 服务器,32g内存 服务器,32g内存服务器,32位系统最大拷贝多大文件夹,32核服务器配多大内存,8g内存服务器tps,8核内存服务器 jvm,Android读取大文件,graph,html  百分比条,html 分析,html 打印文件,html 曲线报表,html5 文件打印,html5全路径" />
+    <meta name="subject" content="其他-空类-graph,其他-空类-jmeter,其他-空类-工具,其他-空类-数据,其他-空类-统计" />
+    <meta name="subjectTime" content="2018-06-14 03:02:26" />
+    <meta name="description"
+        content="Jmeter，jmeter-graph大文件分析利器详解。但是核心性能数据都有。使用方法：java -jar jmeter-graph.jar 文件路径 统计时间间隔（秒）Jmeter-graph工具会在当前目录生成一个JmeterGraph+时间戳的文件夹，文件夹内保存了本次分析的HTML结果文件路径是jtl文件的路..." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="articleSource" content="Q" />
+    <meta name="magicSource" content="N" />
+      <style media="screen">
+        @supports (padding:max(0px)) {
+            .set-safe-area .com-main {
+                bottom: calc(max(12px, constant(safe-area-inset-bottom)) + 50px);
+                bottom: calc(max(12px, env(safe-area-inset-bottom)) + 50px)
+            }
+
+            .set-safe-area .com-main-simple-sec,
+            .set-safe-area .com-main.without-tab-ft,
+            .set-safe-area .com-main.without-ft {
+                bottom: max(12px, constant(safe-area-inset-bottom));
+                bottom: max(12px, env(safe-area-inset-bottom))
+            }
+
+            .set-safe-area .com-main-sec {
+                bottom: max(12px, constant(safe-area-inset-bottom));
+                bottom: max(12px, env(safe-area-inset-bottom))
+            }
+
+            .set-safe-area .com-m-footer,
+            .set-safe-area .sa-fixed-btns {
+                bottom: max(12px, constant(safe-area-inset-bottom));
+                bottom: max(12px, env(safe-area-inset-bottom))
+            }
+
+            .set-safe-area .com-mobile-body {
+                bottom: max(12px, constant(safe-area-inset-bottom));
+                bottom: max(12px, env(safe-area-inset-bottom))
+            }
+        }
+
+        @supports (padding:max(0px)) {
+
+            .set-safe-area .support-wrap,
+            .set-safe-area div.body {
+                bottom: max(12px, constant(safe-area-inset-bottom));
+                bottom: max(12px, env(safe-area-inset-bottom))
+            }
+
+            .set-safe-area .com-responsive-no-ft div.body {
+                bottom: max(12px, constant(safe-area-inset-bottom));
+                bottom: max(12px, env(safe-area-inset-bottom))
+            }
+        }
+
+        .doc-con .J-docShareModal {
+            display: none;
+        }
+
+        .doc-con .J-docShareCopyTipModalMB {
+            display: none
+        }
+
+        .with-focus+.com-main-simple-sec,
+        .with-focus+.com-main,
+        .with-focus+.com-body,
+        .with-focus+.qa-body {
+            top: 100px
+        }
+
+        .qa-detail-ask-panel:after {
+            display: none !important;
+        }
+
+        .sa-fixed-btns .c-btn-weak {
+            background-color: #fff;
+        }
+
+        .qa-r-editor.draft-editor-host.rno-markdown {
+            height: 290px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body style="position:initial">
+    <div id="react-root" class="">
+        <div class="">
+            <div class="cdc-header is-fixed">
+                <div class="cdc-header__placeholder"></div>
+                <div class="cdc-header__inner">
+                    <div class="cdc-header__top">
+                        <div class="cdc-header__top-left"><a href="/?from=20060&amp;from_column=20060" target="_blank"
+                                class="cdc-header__top-logo"><i>腾讯云</i></a>
+                            <div class="cdc-header__top-line"></div><a href="/developer"
+                                class="cdc-header__top-logo community"><i>开发者社区</i></a>
+                            <div class="cdc-header__activity"></div>
+                        </div>
+                        <div class="cdc-header__top-operates"><a
+                                href="/document/product?from=20702&amp;from_column=20702" target="_blank"
+                                class="cdc-header__link">文档</a><a href="/voc/?from=20703&amp;from_column=20703"
+                                target="_blank" class="cdc-header__link">建议反馈</a><a
+                                href="https://console.cloud.tencent.com?from=20063&amp;from_column=20063"
+                                target="_blank" class="cdc-header__link"
+                                track-click="{&quot;areaId&quot;:102001,&quot;subAreaId&quot;:1}">控制台</a></div>
+                    </div>
+                    <div class="cdc-header__bottom">
+                        <div class="cdc-header__bottom-nav"><a href="/developer" class="cdc-header__bottom-home">首页</a>
+                            <div class="cdc-header__nav-list">
+                                <div class="cdc-header__nav-item">学习</div>
+                                <div class="cdc-header__nav-item">活动</div>
+                                <div class="cdc-header__nav-item">专区</div>
+                                <div class="cdc-header__nav-item">工具</div>
+                            </div><a href="https://cloud.tencent.com/tvp?from=20154&amp;from_column=20154"
+                                class="cdc-header__tvp" target="_blank">TVP</a>
+                            <div class="cdc-header__activity"><a class="cdc-header__activity-tit"
+                                    href="https://cloud.tencent.com/act?from=20061&amp;from_column=20061"
+                                    target="_blank">最新优惠活动<div class="cdc-badge">
+                                        <div class="cdc-badge-inner">
+                                            <div class="cdc-badge-text"></div>
+                                        </div>
+                                    </div></a></div>
+                        </div>
+                        <div class="cdc-header__bottom-operates">
+                            <div class="cdc-header__search">
+                                <div class="cdc-search__wrap">
+                                    <div class="cdc-search"><span class="cdc-search__text">文章/答案/技术大牛</span><button
+                                            class="cdc-search__btn">搜索<i class="cdc-search__i search"></i></button>
+                                    </div>
+                                    <div class="cdc-search__dropdown">
+                                        <div class="cdc-search__bar"><input type="text" class="cdc-search__bar-input"
+                                                placeholder="文章/答案/技术大牛" value="" />
+                                            <div class="cdc-search__bar-btns"><button class="cdc-search__btn">搜索<i
+                                                        class="cdc-search__i search"></i></button><button
+                                                    class="cdc-search__btn">关闭<i
+                                                        class="cdc-search__i clear"></i></button></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cdc-header__create"><span class="cdc-header__create-btn"><span
+                                        class="cdc-svg-icon-con"><span class="cdc-svg-icon"
+                                            style="line-height:1;color:inherit;width:16px;height:16px"><svg width="16"
+                                                height="16" viewBox="0 0 16 16" fill="currentcolor"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M14.2466 12.0145C14.1698 13.6258 12.8381 14.9131 11.2129 14.9131H11.1579H4.0927H4.03772C2.4125 14.9131 1.08014 13.6258 1.00334 12.0145H1V11.8668V4.07213V4.04627V3.89922H1.00334C1.08014 2.28732 2.4125 1 4.03772 1H9.6473V1.00069H10.0786L8.7688 2.10773H8.43888H7.7916H6.37904H4.03772C2.97234 2.10773 2.10445 2.9777 2.10445 4.04629V4.41869V4.4472V6.39498V11.4269V11.4309V11.8668C2.10445 12.9354 2.97234 13.8053 4.03772 13.8053H6.37904H8.87153H11.2129C12.2782 13.8053 13.1461 12.9355 13.1461 11.8668V11.466V11.454V9.5181V6.39364L14.2506 5.3051V11.8668V12.0145H14.2466ZM10.4324 7.15226L9.63146 7.99761C9.36577 8.2693 8.69326 8.95104 8.48066 9.17631C8.26726 9.40288 8.09039 9.58901 7.95061 9.73544C7.81079 9.88188 7.72667 9.96597 7.70083 9.98656C7.63321 10.0488 7.55703 10.1144 7.47022 10.1846C7.38412 10.2542 7.29404 10.3099 7.20063 10.3516C7.10722 10.4007 6.97072 10.459 6.79049 10.5305C6.61028 10.6001 6.42213 10.6676 6.22468 10.7339C6.02792 10.8002 5.84109 10.8571 5.66484 10.9061C5.48795 10.9538 5.3561 10.9863 5.2693 11.0009C5.08977 11.0214 4.96988 10.993 4.90956 10.9168C4.84931 10.8405 4.83276 10.7107 4.85924 10.5312C4.87315 10.4331 4.9043 10.292 4.95468 10.1078C5.00431 9.92297 5.05802 9.7315 5.11431 9.53341C5.1713 9.33526 5.22629 9.15179 5.27926 8.98484C5.33297 8.8179 5.37599 8.7026 5.40978 8.64032C5.44953 8.54357 5.49463 8.45413 5.54495 8.37399C5.59465 8.29379 5.66616 8.20503 5.75965 8.10766C5.79934 8.06588 5.89281 7.96649 6.03988 7.81018C6.18624 7.65311 6.80114 7.02774 7.02104 6.79783L7.75117 6.03524L8.56212 5.1899L10.6345 3.02466L12.5214 4.93874L10.4324 7.15226ZM13.816 3.58581C13.7166 3.68987 13.6272 3.78064 13.5483 3.85883C13.4694 3.93703 13.4006 4.0066 13.3423 4.06686C13.276 4.13643 13.2144 4.19738 13.1561 4.24903L11.2785 2.33569C11.3785 2.24025 11.4965 2.12565 11.6336 1.99115C11.7707 1.85668 11.8854 1.75061 11.9761 1.67242C12.0934 1.57708 12.2133 1.51013 12.3385 1.47109C12.4525 1.43529 12.5644 1.41805 12.6751 1.41876H12.7056C12.7665 1.42139 12.8268 1.42729 12.8851 1.43724C12.8838 1.4366 12.8811 1.43724 12.8798 1.4366C12.8811 1.4366 12.8838 1.4366 12.8851 1.43724C13.1376 1.48428 13.4019 1.62009 13.6265 1.83743C13.7511 1.95871 13.8524 2.09382 13.9259 2.23296C14.0346 2.43834 14.0863 2.65304 14.0763 2.8491C14.0763 2.87294 14.0783 2.89748 14.0783 2.92201C14.0783 3.03529 14.0571 3.14789 14.0154 3.26055C13.9737 3.37314 13.9067 3.48185 13.816 3.58581Z"
+                                                    fill="white"></path>
+                                            </svg></span></span>发布<span
+                                        class="cdc-svg-icon-con cdc-header__create-btn-arrow"><span class="cdc-svg-icon"
+                                            style="line-height:1;color:inherit;width:16px;height:16px"><svg width="16"
+                                                height="16" viewBox="0 0 16 16" fill="currentcolor"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M8.16377 4L9.57798 5.41421L14.5277 10.364L13.1135 11.7782L8.1638 6.829L3.21402 11.7782L1.7998 10.364L8.16377 4Z">
+                                                </path>
+                                            </svg></span></span></span></div>
+                            <div class="cdc-header__account">
+                                <div class="cdc-header__account-inner"><button
+                                        class="cdc-btn cdc-header__account-btn cdc-btn--primary">登录/注册</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cdc-m-header is-fixed">
+                <div class="cdc-m-header__placeholder"></div>
+                <div class="cdc-m-header__inner">
+                    <div class="cdc-m-header__main">
+                        <div class="cdc-m-header__trigger"></div>
+                        <div class="cdc-m-header__logo"><i class="cdc-m-header__logo-icon"></i></div>
+                        <div class="cdc-m-header__search"><i class="cdc-m-header__search-icon"></i></div>
+                        <div class="cdc-m-header__operate"><span class="cdc-m-header__operate-icon"></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="J-body col-body news-body news-detail">
+                <div class="com-body">
+                    <div class="com-body-main">
+                        <div class="com-2-layout">
+                            <div class="layout-main">
+                                <div>
+                                    <section class="c-mod col-article">
+                                        <h1 class="col-article-title">Jmeter，jmeter-graph大文件分析利器详解</h1>
+                                        <div class="col-article-infos"><span class="article-infos-item">文章来源：<!-- -->企鹅号
+                                                - 开源测试联盟</span></div>
+                                        <div>
+                                            <div class="rno-markdown undefined rno-">
+                                                <p>No-GUI模式就是通常所说的命令行模式，在Jmeter中把脚本创建好后，最终保存成一个.jmx的文件，然后在命令行下执行</p>
+                                                <p>jmeter -n -t demo.jmx -l result.jtl</p>
+                                                <p>执行结束后，最终测试结果会写到当前目录下的result.jtl中。</p>
+                                                <p>命令行模式的使用方法，网上相关资料很多，这里就不一一概述了。</p>
+                                                <p>自古以来，使用No-GUI模式进行压测，有一个最大的不便之处就是对于性能数据的统计和展示。</p>
+                                                <p>在通常情况下，我们可以通过以下几个方法进行统计</p>
+                                                <p>1、把生成的jtl文件下载到本地windows系统，然后用Jmeter中的聚合报告打开，聚合报告中会展示测试过程中最终的tps、响应时间、错误率等等。此方法的缺点是需要下载jtl文件，并且只能展示最终结果、不能展示各请求的性能曲线。
+                                                </p>
+                                                <p>2、使用Jmeter命令行插件，对最终的jtl文件进行分析，也可以得到类似聚合报告的数据。此方法的优点是不用下载jtl了，直接在服务器上就能生成最终数据。缺点和第一种方法一样，不能展示性能曲线。
+                                                </p>
+                                                <p>3、自Jmeter3.0版本起，Jmeter自带了一个生成HTML报表的功能，功能强大，生成的报表中既包含了类似聚合报告中的最终汇总结果，还有各请求的性能曲线图，包括TPS、响应时间等等。命令为：jmeter
+                                                    -g test.jtl -o ./output（对test.jtl进行分析，生成的HTML报告存放在output目录下）</p>
+                                                <p>一般在工作中使用第三种方法居多，原因是性能测试不但要看最终的平均数据。整个过程中的性能波动大小也比较重要。如果某接口每隔2s
+                                                    TPS就降为0，下一秒TPS又恢复到1000，这种情况往往意味着系统性能存在问题。但如果只看最终tps平均值，很难发现此类问题的。
+                                                </p>
+                                                <p>在使用Jmeter进行压测时，每一次请求的数据（包括请求时间、名称、响应码、响应信息、是否成功等等）都会记录到jtl文件中。也就是说你发了1w次请求，最终的jtl文件中会有1w条数据。
+                                                </p>
+                                                <p>大多情况下，Jmeter自带的HTML报表功能已经能满足我们的需求。但是，此功能有一个比较大的缺陷，那就是性能比较差，换句话说就是分析很慢。TPS越高、执行时间越长、生成的jtl文件越大，分析的越慢。
+                                                </p>
+                                                <p>在性能测试场景中，一般都会有一个稳定性场景，就是长时间的对系统进行压测，验证系统性能是否能够保持稳定。稳定性一般最少8个小时（也有24小时或3*24小时）。这种场景下，使用Jmeter生成的jtl文件会非常大。具体多大要看TPS和执行的时间。比如我曾经做过的一个稳定性测试，运行了24个小时，最终生成的jtl文件超过了10G，10个G的文件，用Jmeter来分析，几乎是个不可能完成的任务，几个小时未必能分析完。
+                                                </p>
+                                                <p>Jmeter的HTML图表分析功能性能慢，主要是因为统计算法不够优化，其次是对数据的统计项分析太多。其实我们通常最关心的指标就是TPS、平均响应时间、tp90、tp95、tp99，错误率等。Jmeter除此之外，还对活动线程数、连接时间、各种维度的响应时间统计、字节数统计等等（Jmeter可以通过配置，减少数据的展示，但是分析时间并没有减少）。这些数据的分析也消耗了大量的时间，而在99%的情况下，我们并不关心这些数据。
+                                                </p>
+                                                <p>时间就是生命啊，在实际工作中我也常常遇到此困扰，如何解决这个问题，提升工作效率呢？</p>
+                                                <p>于是乎利用工作之余，自己搞了一个Jmeter图表分析小工具。可以认为是低配版的Jmeter-HTML报表。但是核心性能数据都有。</p>
+                                                <p>相比Jmeter自带的HTML报表，它具备以下优点：</p>
+                                                <p>1、统计结果所需时间很短，速度比原生报表快将近30倍。</p>
+                                                <p>2、简化了一些不必要的性能数据统计，保留了核心性能数据，如，TPS统计、平均响应时间、90%、95%、99%响应时间、错误率，以及TPS曲线图、平均响应时间曲线图。
+                                                </p>
+                                                <p>对比测试</p>
+                                                <p>我们先做一下对比测试，以下测试都是在同一台压力机上进行</p>
+                                                <p>压力机配置：16核32G内存</p>
+                                                <p>Jdk版本：1.8</p>
+                                                <p>Jmeter版本：4.0</p>
+                                                <p>Jmeter配置统计间隔时间：5秒</p>
+                                                <p>1G文件分析测试</p>
+                                                <p>先选择一个1G大小的结果文件test2.jtl</p>
+                                                <p></p>
+                                                <figure class="">
+                                                    <div class="image-block"><span class="lazy-image-holder"
+                                                            dataurl="https://ask.qcloudimg.com/http-save/developer-news/jaxgxruux6.jpeg"></span>
+                                                    </div>
+                                                </figure>
+                                                <figure class="">
+                                                    <div class="image-block"><span class="lazy-image-holder"
+                                                            dataurl="https://ask.qcloudimg.com/http-save/developer-news/4be8koa6j9.jpeg"></span>
+                                                    </div>
+                                                </figure>
+                                                <figure class="">
+                                                    <div class="image-block"><span class="lazy-image-holder"
+                                                            dataurl="https://ask.qcloudimg.com/http-save/developer-news/9lhrww2tis.jpeg"></span>
+                                                    </div>
+                                                </figure>
+                                                <p>接下来，使用相同的Linux服务器和jtl文件，使用自己开发的分析工具jmeter-graph.jar进行统计。</p>
+                                                <p><strong>使用方法：java -jar jmeter-graph.jar 文件路径 统计时间间隔（秒）</strong></p>
+                                                <p><strong>Jmeter-graph工具会在当前目录生成一个JmeterGraph+时间戳的文件夹，文件夹内保存了本次分析的HTML结果</strong>
+                                                </p>
+                                                <p>文件路径是jtl文件的路径，不指定路径默认是在当前路径下</p>
+                                                <p>统计间隔时间TPS和响应时间曲线图中每隔多少秒展示一次时间，可根据不同的执行时间，选择合适的间隔时间，最小1秒，最大9999秒。通常设置为5秒就行。
+                                                </p>
+                                                <p>工具内部统计了耗时，从打印结果来看，整个分析过程耗时19秒</p>
+                                                <p></p>
+                                                <figure class="">
+                                                    <div class="image-block"><span class="lazy-image-holder"
+                                                            dataurl="https://ask.qcloudimg.com/http-save/developer-news/1tcvwj9ydk.jpeg"></span>
+                                                    </div>
+                                                </figure>
+                                                <p>Jmeter-graph工具会在当前目录生成一个JmeterGraph+时间戳的文件夹，文件夹内保存了本次分析的HTML结果</p>
+                                                <p>整体性能数据</p>
+                                                <p></p>
+                                                <figure class="">
+                                                    <div class="image-block"><span class="lazy-image-holder"
+                                                            dataurl="https://ask.qcloudimg.com/http-save/developer-news/ijq17ij9dl.jpeg"></span>
+                                                    </div>
+                                                </figure>
+                                                <p>将两种方式生成的报表数据进行对比，无论是整体数据，还是曲线数据，两种方式的结果都是一样的（90%、95%、99%响应时间有微小差异，原因是百分比统计边界问题，对小数点的处理逻辑有差异）。
+                                                </p>
+                                                <p><strong>通过对比试验可以看出来，在相同的硬件环境下，Jmeter-graph工具比Jmeter自带分析功能快了30倍。</strong>
+                                                </p>
+                                                <p>10G文件分析测试</p>
+                                                <p>之前的测试已经对比过数据精准度了，因此本次测试只对比耗时。</p>
+                                                <p>考虑到本次文件比较大，使用两种工具进行分析时，可能会导致内存泄漏，在分析前需要考虑Jvm参数的设置。</p>
+                                                <p></p>
+                                                <figure class="">
+                                                    <div class="image-block"><span class="lazy-image-holder"
+                                                            dataurl="https://ask.qcloudimg.com/http-save/developer-news/t37epo25u7.jpeg"></span>
+                                                    </div>
+                                                </figure>
+                                                <figure class="">
+                                                    <div class="image-block"><span class="lazy-image-holder"
+                                                            dataurl="https://ask.qcloudimg.com/http-save/developer-news/xd4d69pmww.jpeg"></span>
+                                                    </div>
+                                                </figure>
+                                                <figure class="">
+                                                    <div class="image-block"><span class="lazy-image-holder"
+                                                            dataurl="https://ask.qcloudimg.com/http-save/developer-news/m0cvb0gi2h.jpeg"></span>
+                                                    </div>
+                                                </figure>
+                                                <p>总结</p>
+                                                <p>1、对小于1G的文件进行分析，使用Jmeter自带功能就够了</p>
+                                                <p>2、大于1G或者更大的文件，可以使用jmeter-graph工具效率更高</p>
+                                            </div>
+                                        </div>
+                                        <div id="J-viewLargeImageBox" class="zoom-mask"
+                                            style="display:none;width:100%;height:100%">
+                                            <div class="zoom-close"></div>
+                                            <div class="zoom-wrap"><img />
+                                                <div class="c-loading">
+                                                    <div class="c-loading-inner">
+                                                        <div class="one"></div>
+                                                        <div class="two"></div>
+                                                        <div class="three"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <ul class="col-article-source">
+                                            <li><span class="article-source-item">发表于: <time
+                                                        dateTime="2018-06-13 09:50:24" title="2018-06-13 09:50:24">
+                                                        2018-06-13<span class="com-v-box">2018-06-13
+                                                            09:50:24</span></time></span></li>
+                                            <li>原文链接<!-- -->：<!-- -->https://kuaibao.qq.com/s/20180613G0G73R00?refer=cp_1026
+                                            </li>
+                                            <li>腾讯「腾讯云开发者社区」是腾讯内容开放平台帐号（企鹅号）传播渠道之一，根据<a track-click="" track-exposure=""
+                                                    href="https://om.qq.com/notice/a/20160429/047194.htm"
+                                                    target="_blank" class="com-link" style="color:#00a4ff"
+                                                    rel="nofollow">《腾讯内容开放平台服务协议》</a>转载发布内容。</li>
+                                            <li>如有侵权，请联系 cloudcommunity@tencent.com 删除。</li>
+                                        </ul>
+                                        <div class="col-article-tags com-v-box">
+                                            <nav class="col-tags"><a track-click="" track-exposure=""
+                                                    href="/developer/information/1%E6%A0%B81g%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%80%8E%E4%B9%88%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83"
+                                                    class="col-tag">1核1g服务器怎么配置环境</a><a track-click="" track-exposure=""
+                                                    href="/developer/information/1%E6%A0%B81g%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8Dwindows%E4%BB%80%E4%B9%88%E7%B3%BB%E7%BB%9F"
+                                                    class="col-tag">1核1g服务器配windows什么系统</a><a track-click=""
+                                                    track-exposure=""
+                                                    href="/developer/information/1%E6%A0%B81g%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8Dwindows%E4%BB%80%E4%B9%88%E7%B3%BB%E7%BB%9F%E5%A5%BD"
+                                                    class="col-tag">1核1g服务器配windows什么系统好</a><a track-click=""
+                                                    track-exposure=""
+                                                    href="/developer/information/1%E6%A0%B82g%E6%9C%8D%E5%8A%A1%E5%99%A8%20windows"
+                                                    class="col-tag">1核2g服务器 windows</a><a track-click=""
+                                                    track-exposure=""
+                                                    href="/developer/information/2%E6%A0%B82g%E5%86%85%E5%AD%98%E6%9C%8D%E5%8A%A1%E5%99%A8"
+                                                    class="col-tag">2核2g内存服务器</a></nav>
+                                        </div>
+                                        <div class="com-widget-operations" style="visibility:hidden">
+                                            <div class="main-cnt"><a track-click="" track-exposure=""
+                                                    href="javascript:;" class="com-opt-link link-like"><i
+                                                        class="com-i-like"></i><span class="text">0</span></a></div>
+                                            <div class="extra-cnt"><span class="com-opt-text share-text">分享</span>
+                                                <ul class="com-share-options">
+                                                    <li>
+                                                        <div class="c-bubble-trigger"><a track-click=""
+                                                                track-exposure="" href="javascript:;"
+                                                                class="opt-item"><i class="opt-icon wechat"></i></a>
+                                                            <div class="c-bubble c-bubble-left ">
+                                                                <div class="c-bubble-inner">
+                                                                    <div class="qr-img"></div>
+                                                                    <p class="qr-txt">分享快讯到朋友圈</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="c-bubble-trigger"><a track-click=""
+                                                                track-exposure="" href="javascript:;"
+                                                                class="opt-item"><i class="opt-icon qq"></i></a>
+                                                            <div class="c-bubble c-bubble-left ">
+                                                                <div class="c-bubble-inner"><span>分享快讯到 QQ</span></div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="c-bubble-trigger"><a track-click=""
+                                                                track-exposure="" href="javascript:;"
+                                                                class="opt-item"><i class="opt-icon weibo"></i></a>
+                                                            <div class="c-bubble c-bubble-left ">
+                                                                <div class="c-bubble-inner"><span>分享快讯到微博</span></div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="c-bubble-trigger"><a class="opt-item"
+                                                                href="javascript:;"><i class="opt-icon copy"></i></a>
+                                                            <div class="c-bubble c-bubble-left ">
+                                                                <div class="c-bubble-inner"><span>复制快讯链接到剪贴板</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <ul class="col-slibing-articles" track-click="{&quot;areaId&quot;:115001}"
+                                        track-exposure="{&quot;areaId&quot;:115001}">
+                                        <li><a track-click="{&quot;elementId&quot;:1}" track-exposure=""
+                                                href="/developer/news/241806"
+                                                hotrep="community.news.news-detail.prev">上一篇：Python数据类型（二）</a></li>
+                                        <li><a track-click="{&quot;elementId&quot;:2}" track-exposure=""
+                                                href="/developer/news/241810"
+                                                hotrep="community.news.news-detail.next">下一篇：再论社群的共识</a></li>
+                                    </ul>
+                                    <div style="margin:50px auto"></div>
+                                    <div style="margin:50px auto"></div>
+                                    <div class="detail-section">
+                                        <div class="detail-section-inner">
+                                            <div class="c-mod detail-section-hd">
+                                                <h2 class="detail-section-tit"><span>相关</span>快讯</h2>
+                                            </div>
+                                            <ul class="c-mod detail-section-bd news-article-related-list"
+                                                track-click="{&quot;areaId&quot;:115003}"
+                                                track-exposure="{&quot;areaId&quot;:115003}">
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:388494,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:1}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:388494,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:1}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/388494"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">使用JMeter插件做性能测试——Testfan打卡学测开0123</a>
+                                                    </h3><span class="news-article-related-date">2019-01-23</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:252265,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:2}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:252265,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:2}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/252265"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">Jmeter压力测试：菜鸟的性能测试成长之路</a>
+                                                    </h3><span class="news-article-related-date">2018-06-25</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:1007928,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:3}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:1007928,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:3}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/1007928"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">压测和性能分析方法论</a>
+                                                    </h3><span class="news-article-related-date">2023-02-20</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:783817,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:4}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:783817,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:4}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/783817"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">JMeter常用组件</a>
+                                                    </h3><span class="news-article-related-date">2021-03-09</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:200196,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:5}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:200196,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:5}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/200196"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">JMeter基础之开启性能测试</a>
+                                                    </h3><span class="news-article-related-date">2018-05-04</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:367477,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:6}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:367477,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:6}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/367477"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">如何学习性能测试？LoadRunner小技巧集锦</a>
+                                                    </h3><span class="news-article-related-date">2018-12-07</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:152379,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:7}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:152379,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:7}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/152379"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">使用JMeter进行简单的性能测试</a>
+                                                    </h3><span class="news-article-related-date">2018-03-20</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:8112,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:8}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:8112,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:8}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/8112"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">开源性能测试工具JMeter快速入门（一）</a>
+                                                    </h3><span class="news-article-related-date">2018-01-28</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:115687,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:9}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:115687,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:9}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/115687"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">这里有Oracle性能优化经验，速来get！</a>
+                                                    </h3><span class="news-article-related-date">2018-02-24</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:52627,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:10}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:52627,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:10}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/52627"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">站点压测利器-nGrinder</a>
+                                                    </h3><span class="news-article-related-date">2018-01-27</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:38147,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:11}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:38147,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:11}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/38147"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">Jmeter下载安装初使用</a>
+                                                    </h3><span class="news-article-related-date">2018-01-26</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:472337,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:12}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:472337,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:12}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/472337"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">Jmeter非GUI运行模式及运行参数</a>
+                                                    </h3><span class="news-article-related-date">2019-11-11</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:290888,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:13}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:290888,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:13}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/290888"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">使用Jmeter进行性能测试实战</a>
+                                                    </h3><span class="news-article-related-date">2018-08-02</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:292620,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:14}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:292620,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:14}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/292620"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">jmeter性能测试实战心法-简单入门</a>
+                                                    </h3><span class="news-article-related-date">2018-08-05</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:377671,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:15}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:377671,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:15}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/377671"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">性能测试工具对比：Jmeter与LoadRunner的异同</a>
+                                                    </h3><span class="news-article-related-date">2018-12-27</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:19781,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:16}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:19781,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:16}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/19781"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">理解XMeter性能测试报告</a>
+                                                    </h3><span class="news-article-related-date">2018-01-27</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:698674,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:17}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:698674,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:17}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/698674"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">如何用Jmeter进行http接口性能测试？全教程来喽！</a>
+                                                    </h3><span class="news-article-related-date">2020-09-24</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:447677,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:18}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:447677,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:18}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/447677"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">使用Jmeter应该如何进行http接口性能测试？</a>
+                                                    </h3><span class="news-article-related-date">2019-09-20</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:295640,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:19}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:295640,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:19}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/295640"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">what？服务器CPU又炸了？</a>
+                                                    </h3><span class="news-article-related-date">2018-08-09</span>
+                                                </li>
+                                                <li class="news-article-related-item"
+                                                    track-click="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:248013,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:20}"
+                                                    track-exposure="{&quot;objectType&quot;:&quot;new&quot;,&quot;objectId&quot;:248013,&quot;recPolicyId&quot;:2600,&quot;areaId&quot;:115003,&quot;positionId&quot;:20}">
+                                                    <h3 class="news-article-related-tit"><a track-click=""
+                                                            track-exposure="" href="/developer/news/248013"
+                                                            target="_blank"
+                                                            hotrep="community.news.article_related.title_link">使用Jmeter进行http接口性能测试</a>
+                                                    </h3><span class="news-article-related-date">2018-06-20</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layout-side">
+                                <div class="com-2-section info-side-public">
+                                    <header class="com-2-section-hd">
+                                        <h2 class="com-2-section-title without-icon"><span>扫码</span></h2>
+                                    </header>
+                                    <div class="com-2-section-bd">
+                                        <div class="com-group-qr-card">
+                                            <div class="com-group-qr-card__container">
+                                                <div class="com-group-qr-card__item">
+                                                    <div class="com-group-qr-card-text">
+                                                        <div class="com-group-qr-card-title">添加站长 进交流群</div>
+                                                        <div class="com-group-qr-card-desc">
+                                                            <p>领取专属 <em>10元无门槛券</em></p>
+                                                            <p>私享最新 <em>技术干货</em></p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="com-group-qr-card-qr"><img
+                                                            src="https://qcloudimg.tencent-cloud.cn/raw/9c02ffe6fdec07d302298f08a30e54a3.png"
+                                                            alt="扫码加入开发者社群" /></div>
+                                                </div>
+                                            </div>
+                                            <div class="com-group-qr-card__pagination"><span
+                                                    class="com-group-qr-card__pagination-bullet is-active"></span><span
+                                                    class="com-group-qr-card__pagination-bullet"></span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+        <div class="com-widget-global">
+            <div style="position:relative;z-index:8088">
+                <div class="com-widget-global2">
+                    <div class="com-widget-global2__btn">
+                        <div class="com-widget-global2__btn-tag">领券</div>
+                    </div>
+                    <div class="com-widget-global2__btn top" style="visibility:hidden"></div>
+                </div>
+            </div>
+        </div>
+        <div id="dialog-root"></div>
+        <div id="rno-dialog-root" class="rno-modal-wrap"></div>
+    </div>
+    <script>window.isServerContext = false; window.isClientContext = true;</script>
+    <script>window.$serverTime = 1710731677304; window.$clientTime = 1710731677304;</script>
+    <script
+        class="">window.$ua = { "browser": { "name": "Chrome", "version": "114.0.0.0", "major": "114" }, "cpu": { "architecture": "amd64" }, "device": {}, "engine": { "name": "Blink", "version": "114.0.0.0" }, "os": { "name": "Windows", "version": "10" } };</script>
+    <script
+        src="https://cloudcache.tencent-cloud.com/qcloud/main/scripts/release/common/vendors/babel/polyfill.6.26.min.js"></script>
+    <script
+        src="https://cloudcache.tencent-cloud.com/qcloud/main/scripts/release/common/vendors/react/react.16.8.6.min.js"></script>
+    <script
+        src="https://cloudcache.tencent-cloud.com/qcloud/main/scripts/release/common/vendors/react/react-dom.16.8.6.min.js"></script>
+    <script
+        src="https://cloudcache.tencent-cloud.com/qcloud/main/scripts/release/common/vendors/jquery-3.2.1.min.js"></script>
+    <script src="//cloudcache.tencent-cloud.com/qcloud/developer/scripts/release/base.225e98f95c.js?max_age=31536000"
+        crossorigin="anonymous"></script>
+    <script
+        src="//cloudcache.tencent-cloud.com/qcloud/draft-master/dist/draft-master-v2.0.49.d4s2ddo9sb.js?max_age=31536000"></script>
+    <script src="https://cloud.tencent.com/qccomponent/login/api.js"></script>
+    <script
+        src="//cloudcache.tencent-cloud.com/qcloud/main/scripts/release/common/deps/wechatJsSdk.js?version=1_0_1&amp;max_age=31536000"></script>
+    <script src="//cloudcache.tencent-cloud.com/qcloud/developer/scripts/release/common.9ed7494c7d.js?max_age=31536000"
+        crossorigin="anonymous"></script>
+    <script src="https://web.sdk.qcloud.com/player/tcplayer/release/v4.7.2/tcplayer.v4.7.2.min.js"></script>
+    <script src="//dscache.tencent-cloud.cn/ecache/qcstat/qcloud/qcloudStatApi.js"></script>
+    <script src="https://qccommunity.qcloudimg.com/community-track/community-track.c8b4aea9.iife.js"></script>
+    <script
+        class="">            var track = new QC_COMMUNITY_TRACK(); Object.defineProperty(window, 'QC_TRACK_INSTANCE', { value: { pvId: track.pvId, get report() { return track.report; }, get startCreate() { return track.startCreate; }, get stopCreate() { return track.stopCreate; }, }, writable: false, })</script>
+    <script
+        src="//cloudcache.tencent-cloud.com/qcloud/developer/scripts/release/news/news.6ce5b39e1c.js?max_age=31536000"
+        crossorigin="anonymous"></script>
+    <script
+        class="">window.$render({ "newsDetail": { "id": 241808, "title": "Jmeter，jmeter-graph大文件分析利器详解", "status": 1, "mediaName": "开源测试联盟", "crawlTime": 1528916546, "publishTime": 1528854624, "content": "entityMap|0|type|IMAGE|mutability|IMMUTABLE|data|imageUrl|https://ask.qcloudimg.com/http-save/developer-news/jaxgxruux6.jpeg|imageAlt|1|https://ask.qcloudimg.com/http-save/developer-news/4be8koa6j9.jpeg|2|https://ask.qcloudimg.com/http-save/developer-news/9lhrww2tis.jpeg|3|https://ask.qcloudimg.com/http-save/developer-news/1tcvwj9ydk.jpeg|4|https://ask.qcloudimg.com/http-save/developer-news/ijq17ij9dl.jpeg|5|https://ask.qcloudimg.com/http-save/developer-news/t37epo25u7.jpeg|6|https://ask.qcloudimg.com/http-save/developer-news/xd4d69pmww.jpeg|7|https://ask.qcloudimg.com/http-save/developer-news/m0cvb0gi2h.jpeg|blocks|key|fi9kj|text|No-GUI模式就是通常所说的命令行模式，在Jmeter中把脚本创建好后，最终保存成一个.jmx的文件，然后在命令行下执行|unstyled|depth|inlineStyleRanges|entityRanges|7cmre|jmeter+-n+-t+demo.jmx+-l+result.jtl|7tgjn|执行结束后，最终测试结果会写到当前目录下的result.jtl中。|u73n|命令行模式的使用方法，网上相关资料很多，这里就不一一概述了。|4uq7v|自古以来，使用No-GUI模式进行压测，有一个最大的不便之处就是对于性能数据的统计和展示。|92dq1|在通常情况下，我们可以通过以下几个方法进行统计|em7c5|1、把生成的jtl文件下载到本地windows系统，然后用Jmeter中的聚合报告打开，聚合报告中会展示测试过程中最终的tps、响应时间、错误率等等。此方法的缺点是需要下载jtl文件，并且只能展示最终结果、不能展示各请求的性能曲线。|bpf5v|2、使用Jmeter命令行插件，对最终的jtl文件进行分析，也可以得到类似聚合报告的数据。此方法的优点是不用下载jtl了，直接在服务器上就能生成最终数据。缺点和第一种方法一样，不能展示性能曲线。|2uk6r|3、自Jmeter3.0版本起，Jmeter自带了一个生成HTML报表的功能，功能强大，生成的报表中既包含了类似聚合报告中的最终汇总结果，还有各请求的性能曲线图，包括TPS、响应时间等等。命令为：jmeter+-g+test.jtl+-o+./output（对test.jtl进行分析，生成的HTML报告存放在output目录下）|c82c6|一般在工作中使用第三种方法居多，原因是性能测试不但要看最终的平均数据。整个过程中的性能波动大小也比较重要。如果某接口每隔2s+TPS就降为0，下一秒TPS又恢复到1000，这种情况往往意味着系统性能存在问题。但如果只看最终tps平均值，很难发现此类问题的。|bu7m2|在使用Jmeter进行压测时，每一次请求的数据（包括请求时间、名称、响应码、响应信息、是否成功等等）都会记录到jtl文件中。也就是说你发了1w次请求，最终的jtl文件中会有1w条数据。|5j391|大多情况下，Jmeter自带的HTML报表功能已经能满足我们的需求。但是，此功能有一个比较大的缺陷，那就是性能比较差，换句话说就是分析很慢。TPS越高、执行时间越长、生成的jtl文件越大，分析的越慢。|518rs|在性能测试场景中，一般都会有一个稳定性场景，就是长时间的对系统进行压测，验证系统性能是否能够保持稳定。稳定性一般最少8个小时（也有24小时或3*24小时）。这种场景下，使用Jmeter生成的jtl文件会非常大。具体多大要看TPS和执行的时间。比如我曾经做过的一个稳定性测试，运行了24个小时，最终生成的jtl文件超过了10G，10个G的文件，用Jmeter来分析，几乎是个不可能完成的任务，几个小时未必能分析完。|gqsn|Jmeter的HTML图表分析功能性能慢，主要是因为统计算法不够优化，其次是对数据的统计项分析太多。其实我们通常最关心的指标就是TPS、平均响应时间、tp90、tp95、tp99，错误率等。Jmeter除此之外，还对活动线程数、连接时间、各种维度的响应时间统计、字节数统计等等（Jmeter可以通过配置，减少数据的展示，但是分析时间并没有减少）。这些数据的分析也消耗了大量的时间，而在99%25的情况下，我们并不关心这些数据。|5pp59|时间就是生命啊，在实际工作中我也常常遇到此困扰，如何解决这个问题，提升工作效率呢？|32vf1|于是乎利用工作之余，自己搞了一个Jmeter图表分析小工具。可以认为是低配版的Jmeter-HTML报表。但是核心性能数据都有。|25bjm|相比Jmeter自带的HTML报表，它具备以下优点：|9aqrb|1、统计结果所需时间很短，速度比原生报表快将近30倍。|a3b7c|2、简化了一些不必要的性能数据统计，保留了核心性能数据，如，TPS统计、平均响应时间、90%25、95%25、99%25响应时间、错误率，以及TPS曲线图、平均响应时间曲线图。|f2vht|对比测试|c6eli|我们先做一下对比测试，以下测试都是在同一台压力机上进行|2p447|压力机配置：16核32G内存|40em5|Jdk版本：1.8|chedd|Jmeter版本：4.0|3r7m9|Jmeter配置统计间隔时间：5秒|f6gvp|1G文件分析测试|cuee1|先选择一个1G大小的结果文件test2.jtl|6pm0d|ck029|📷|atomic|offset|length|dstb1|t4q6|438mn|bagcu|4nllo|898rf|cqth1|2fp7b|接下来，使用相同的Linux服务器和jtl文件，使用自己开发的分析工具jmeter-graph.jar进行统计。|25uo1|使用方法：java+-jar+jmeter-graph.jar+文件路径+统计时间间隔（秒）|style|BOLD|3kt3q|Jmeter-graph工具会在当前目录生成一个JmeterGraph%2B时间戳的文件夹，文件夹内保存了本次分析的HTML结果|1e9mi|文件路径是jtl文件的路径，不指定路径默认是在当前路径下|19qfr|统计间隔时间TPS和响应时间曲线图中每隔多少秒展示一次时间，可根据不同的执行时间，选择合适的间隔时间，最小1秒，最大9999秒。通常设置为5秒就行。|cnmhq|工具内部统计了耗时，从打印结果来看，整个分析过程耗时19秒|cnim5|87qad|ckbaq|dc2c7|Jmeter-graph工具会在当前目录生成一个JmeterGraph%2B时间戳的文件夹，文件夹内保存了本次分析的HTML结果|2rjco|整体性能数据|sk7j|cg9qa|d7mdk|6qbg1|将两种方式生成的报表数据进行对比，无论是整体数据，还是曲线数据，两种方式的结果都是一样的（90%25、95%25、99%25响应时间有微小差异，原因是百分比统计边界问题，对小数点的处理逻辑有差异）。|fnp5h|通过对比试验可以看出来，在相同的硬件环境下，Jmeter-graph工具比Jmeter自带分析功能快了30倍。|f06qb|10G文件分析测试|81bb1|之前的测试已经对比过数据精准度了，因此本次测试只对比耗时。|f00bv|考虑到本次文件比较大，使用两种工具进行分析时，可能会导致内存泄漏，在分析前需要考虑Jvm参数的设置。|2egsm|adbs0|51e0g|fh7t7|b78hr|7bf09|a00lg|5ba0l|68ar5|af8f5|总结|fgim|1、对小于1G的文件进行分析，使用Jmeter自带功能就够了|2c1aa|2、大于1G或者更大的文件，可以使用jmeter-graph工具效率更高^0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|1|0|0|0|0|0|1|1|0|0|0|0|1|2|0|0|0|0|1A|0|0|1Q|0|0|0|0|0|0|1|3|0|0|0|0|0|0|1|4|0|0|0|0|1J|0|0|0|0|0|0|1|5|0|0|0|0|1|6|0|0|0|0|1|7|0|0|0|0^^$0|$1|$2|3|4|5|6|$7|8|9|-4]]|A|$2|3|4|5|6|$7|B|9|-4]]|C|$2|3|4|5|6|$7|D|9|-4]]|E|$2|3|4|5|6|$7|F|9|-4]]|G|$2|3|4|5|6|$7|H|9|-4]]|I|$2|3|4|5|6|$7|J|9|-4]]|K|$2|3|4|5|6|$7|L|9|-4]]|M|$2|3|4|5|6|$7|N|9|-4]]]|O|@$P|Q|R|S|2|T|U|43|V|@]|W|@]|6|$]]|$P|X|R|Y|2|T|U|44|V|@]|W|@]|6|$]]|$P|Z|R|10|2|T|U|45|V|@]|W|@]|6|$]]|$P|11|R|12|2|T|U|46|V|@]|W|@]|6|$]]|$P|13|R|14|2|T|U|47|V|@]|W|@]|6|$]]|$P|15|R|16|2|T|U|48|V|@]|W|@]|6|$]]|$P|17|R|18|2|T|U|49|V|@]|W|@]|6|$]]|$P|19|R|1A|2|T|U|4A|V|@]|W|@]|6|$]]|$P|1B|R|1C|2|T|U|4B|V|@]|W|@]|6|$]]|$P|1D|R|1E|2|T|U|4C|V|@]|W|@]|6|$]]|$P|1F|R|1G|2|T|U|4D|V|@]|W|@]|6|$]]|$P|1H|R|1I|2|T|U|4E|V|@]|W|@]|6|$]]|$P|1J|R|1K|2|T|U|4F|V|@]|W|@]|6|$]]|$P|1L|R|1M|2|T|U|4G|V|@]|W|@]|6|$]]|$P|1N|R|1O|2|T|U|4H|V|@]|W|@]|6|$]]|$P|1P|R|1Q|2|T|U|4I|V|@]|W|@]|6|$]]|$P|1R|R|1S|2|T|U|4J|V|@]|W|@]|6|$]]|$P|1T|R|1U|2|T|U|4K|V|@]|W|@]|6|$]]|$P|1V|R|1W|2|T|U|4L|V|@]|W|@]|6|$]]|$P|1X|R|1Y|2|T|U|4M|V|@]|W|@]|6|$]]|$P|1Z|R|20|2|T|U|4N|V|@]|W|@]|6|$]]|$P|21|R|22|2|T|U|4O|V|@]|W|@]|6|$]]|$P|23|R|24|2|T|U|4P|V|@]|W|@]|6|$]]|$P|25|R|26|2|T|U|4Q|V|@]|W|@]|6|$]]|$P|27|R|28|2|T|U|4R|V|@]|W|@]|6|$]]|$P|29|R|2A|2|T|U|4S|V|@]|W|@]|6|$]]|$P|2B|R|2C|2|T|U|4T|V|@]|W|@]|6|$]]|$P|2D|R|-4|2|T|U|4U|V|@]|W|@]|6|$]]|$P|2E|R|2F|2|2G|U|4V|V|@]|W|@$2H|4W|2I|4X|P|4Y]]|6|$]]|$P|2J|R|-4|2|T|U|4Z|V|@]|W|@]|6|$]]|$P|2K|R|-4|2|T|U|50|V|@]|W|@]|6|$]]|$P|2L|R|2F|2|2G|U|51|V|@]|W|@$2H|52|2I|53|P|54]]|6|$]]|$P|2M|R|-4|2|T|U|55|V|@]|W|@]|6|$]]|$P|2N|R|-4|2|T|U|56|V|@]|W|@]|6|$]]|$P|2O|R|2F|2|2G|U|57|V|@]|W|@$2H|58|2I|59|P|5A]]|6|$]]|$P|2P|R|-4|2|T|U|5B|V|@]|W|@]|6|$]]|$P|2Q|R|2R|2|T|U|5C|V|@]|W|@]|6|$]]|$P|2S|R|2T|2|T|U|5D|V|@$2H|5E|2I|5F|2U|2V]]|W|@]|6|$]]|$P|2W|R|2X|2|T|U|5G|V|@$2H|5H|2I|5I|2U|2V]]|W|@]|6|$]]|$P|2Y|R|2Z|2|T|U|5J|V|@]|W|@]|6|$]]|$P|30|R|31|2|T|U|5K|V|@]|W|@]|6|$]]|$P|32|R|33|2|T|U|5L|V|@]|W|@]|6|$]]|$P|34|R|-4|2|T|U|5M|V|@]|W|@]|6|$]]|$P|35|R|2F|2|2G|U|5N|V|@]|W|@$2H|5O|2I|5P|P|5Q]]|6|$]]|$P|36|R|-4|2|T|U|5R|V|@]|W|@]|6|$]]|$P|37|R|38|2|T|U|5S|V|@]|W|@]|6|$]]|$P|39|R|3A|2|T|U|5T|V|@]|W|@]|6|$]]|$P|3B|R|-4|2|T|U|5U|V|@]|W|@]|6|$]]|$P|3C|R|2F|2|2G|U|5V|V|@]|W|@$2H|5W|2I|5X|P|5Y]]|6|$]]|$P|3D|R|-4|2|T|U|5Z|V|@]|W|@]|6|$]]|$P|3E|R|3F|2|T|U|60|V|@]|W|@]|6|$]]|$P|3G|R|3H|2|T|U|61|V|@$2H|62|2I|63|2U|2V]]|W|@]|6|$]]|$P|3I|R|3J|2|T|U|64|V|@]|W|@]|6|$]]|$P|3K|R|3L|2|T|U|65|V|@]|W|@]|6|$]]|$P|3M|R|3N|2|T|U|66|V|@]|W|@]|6|$]]|$P|3O|R|-4|2|T|U|67|V|@]|W|@]|6|$]]|$P|3P|R|2F|2|2G|U|68|V|@]|W|@$2H|69|2I|6A|P|6B]]|6|$]]|$P|3Q|R|-4|2|T|U|6C|V|@]|W|@]|6|$]]|$P|3R|R|-4|2|T|U|6D|V|@]|W|@]|6|$]]|$P|3S|R|2F|2|2G|U|6E|V|@]|W|@$2H|6F|2I|6G|P|6H]]|6|$]]|$P|3T|R|-4|2|T|U|6I|V|@]|W|@]|6|$]]|$P|3U|R|-4|2|T|U|6J|V|@]|W|@]|6|$]]|$P|3V|R|2F|2|2G|U|6K|V|@]|W|@$2H|6L|2I|6M|P|6N]]|6|$]]|$P|3W|R|-4|2|T|U|6O|V|@]|W|@]|6|$]]|$P|3X|R|3Y|2|T|U|6P|V|@]|W|@]|6|$]]|$P|3Z|R|40|2|T|U|6Q|V|@]|W|@]|6|$]]|$P|41|R|42|2|T|U|6R|V|@]|W|@]|6|$]]]]", "summary": "No-GUI模式就是通常所说的命令行模式，在Jmeter中把脚本创建好后，最终保存成一个.jmx的文件，然后在命令行下执行jmeter-n-tdemo.jmx-lresult.jtl执行结束后，最终测试结果会写到当前目录下的result.jtl中。命令行模式的使用方法，网上相关资料很多，这里就不一一概述了。自古以来，使用No-GUI模式进行压测，有一个最大的不便之处就是对于性能数据的统计和展示。在通常情况下，我们可以通过以下几个方法进行统计1、把生成的jtl文件下载到本地windows系统，然后", "originalUrl": "https://kuaibao.qq.com/s/20180613G0G73R00?refer=cp_1026", "readNum": 2289, "likeNum": 0, "coverImage": "https://ask.qcloudimg.com/http-save/developer-news/jaxgxruux6.jpeg", "auditTime": 1529030083, "type": 0, "extra": { "description": "Jmeter，jmeter-graph大文件分析利器详解。但是核心性能数据都有。使用方法：java -jar jmeter-graph.jar 文件路径 统计时间间隔（秒）Jmeter-graph工具会在当前目录生成一个JmeterGraph+时间戳的文件夹，文件夹内保存了本次分析的HTML结果文件路径是jtl文件的路径，不指定路径默认是在当前路径下统计间隔时间TPS和响应时间曲线图中每隔多少秒展示一次时间，可根据不同的执行时间，选择合适的间隔时间，最小1秒，最大9999秒。", "contentType": "packed" }, "deleted": false, "keywords": ["1核1g服务器怎么配置环境", "1核1g服务器配windows什么系统", "1核1g服务器配windows什么系统好", "1核2g服务器 windows", "2核2g内存服务器", "32g 内存 服务器", "32g内存 服务器", "32g内存服务器", "32位系统最大拷贝多大文件夹", "32核服务器配多大内存", "8g内存服务器tps", "8核内存服务器 jvm", "Android读取大文件", "graph", "html  百分比条", "html 分析", "html 打印文件", "html 曲线报表", "html5 文件打印", "html5全路径"], "tags": { "13769": { "categoryId": 99, "groupId": 0, "groupName": "", "tagId": 13769, "tagName": "graph" }, "14230": { "categoryId": 99, "groupId": 0, "groupName": "", "tagId": 14230, "tagName": "jmeter" }, "17276": { "categoryId": 99, "groupId": 0, "groupName": "", "tagId": 17276, "tagName": "工具" }, "17440": { "categoryId": 99, "groupId": 0, "groupName": "", "tagId": 17440, "tagName": "数据" }, "17470": { "categoryId": 99, "groupId": 0, "groupName": "", "tagId": 17470, "tagName": "统计" } } }, "adjacentNews": { "prevNews": { "id": 241806, "articleId": 241806, "title": "Python数据类型（二）", "content": "", "summary": "", "abstract": "", "status": 1, "mediaName": "Aidas人工智能", "crawlTime": 1528916541, "publishTime": 1528854629, "auditTime": 1529030083, "originalUrl": "", "coverImage": "https://ask.qcloudimg.com/http-save/developer-news/b68ktjcen8.jpeg", "coverImageUrl": "https://ask.qcloudimg.com/http-save/developer-news/b68ktjcen8.jpeg", "type": 0, "extra": { "description": "Python数据类型（二）。示例代码：dict()#建立空字典adct={a:1,b:2,c:3.4}#用键名引用成员Python也提供了很多有用的字典操作函数，如下图所示：常用内置常量None的意义正是其字面意义，即“无”，常用来表示没有值的对象True（真）与False（假）是Python的逻辑型数据Python中逻辑假包括False、None、0、“（空字符串）、（）（空元组）、（空列表）和{ }（空字典）等，而其余任何值都视为真。" }, "date": 20180613 }, "nextNews": { "id": 241810, "articleId": 241810, "title": "再论社群的共识", "content": "", "summary": "", "abstract": "", "status": 0, "mediaName": "迪森乐园", "crawlTime": 1528916549, "publishTime": 1528854838, "auditTime": 0, "originalUrl": "", "coverImage": "https://ask.qcloudimg.com/http-save/developer-news/uhmllctxdc.jpeg", "coverImageUrl": "https://ask.qcloudimg.com/http-save/developer-news/uhmllctxdc.jpeg", "type": 0, "extra": { "description": "再论社群的共识。本文由“币嗨Bihi内容合伙人计划”赞助币乎支点共识公约比较今天发生了一件很恐怖的事情，看到币乎的币乎公告 | 币乎生态共识公约（20180612公示版）全员共建，维护币乎生态健康~我的第一反应竟然是看看和支点的有什幺差别，竟然，在我心目中，很多方面，最主要是体验方面，支点成为标杆了！为了蹭热点啊，本节完。就是这样，我们都是被Token收买的。AMT社区今天在群里面讨论的时候大家提到一个非常有趣的社区。" }, "date": 20180613 } }, "relatedNews": [{ "newsId": 388494, "title": "使用JMeter插件做性能测试——Testfan打卡学测开0123", "status": 0, "auditTime": null, "originPublishTime": "2019-01-23T07:50:49+08:00", "createTime": "2019-01-23T08:16:08+08:00" }, { "newsId": 252265, "title": "Jmeter压力测试：菜鸟的性能测试成长之路", "status": 1, "auditTime": "2018-06-25T11:26:00+08:00", "originPublishTime": "2018-06-22T15:33:40+08:00", "createTime": "2018-06-22T16:20:19+08:00" }, { "newsId": 1007928, "title": "压测和性能分析方法论", "status": 0, "auditTime": null, "originPublishTime": "2023-02-20T08:05:00+08:00", "createTime": "2023-02-20T08:20:13+08:00" }, { "newsId": 783817, "title": "JMeter常用组件", "status": 0, "auditTime": null, "originPublishTime": "2021-03-09T15:11:27+08:00", "createTime": "2021-03-09T15:22:03+08:00" }, { "newsId": 200196, "title": "JMeter基础之开启性能测试", "status": 1, "auditTime": "2018-05-04T14:15:39+08:00", "originPublishTime": "2018-05-04T12:00:49+08:00", "createTime": "2018-05-04T12:22:11+08:00" }, { "newsId": 367477, "title": "如何学习性能测试？LoadRunner小技巧集锦", "status": 0, "auditTime": null, "originPublishTime": "2018-12-07T17:20:38+08:00", "createTime": "2018-12-07T17:39:18+08:00" }, { "newsId": 152379, "title": "使用JMeter进行简单的性能测试", "status": 0, "auditTime": null, "originPublishTime": "2018-03-20T17:19:02+08:00", "createTime": "2018-03-20T17:29:57+08:00" }, { "newsId": 8112, "title": "开源性能测试工具JMeter快速入门（一）", "status": 0, "auditTime": null, "originPublishTime": "2018-01-25T16:10:47+08:00", "createTime": "2018-01-28T22:45:08+08:00" }, { "newsId": 115687, "title": "这里有Oracle性能优化经验，速来get！", "status": 0, "auditTime": null, "originPublishTime": "2018-02-24T17:00:46+08:00", "createTime": "2018-02-24T18:20:16+08:00" }, { "newsId": 52627, "title": "站点压测利器-nGrinder", "status": 0, "auditTime": null, "originPublishTime": "2018-01-06T09:00:02+08:00", "createTime": "2018-01-27T21:03:48+08:00" }, { "newsId": 38147, "title": "Jmeter下载安装初使用", "status": 0, "auditTime": null, "originPublishTime": "2017-12-13T14:34:30+08:00", "createTime": "2018-01-26T13:06:20+08:00" }, { "newsId": 472337, "title": "Jmeter非GUI运行模式及运行参数", "status": 1, "auditTime": "2019-11-11T15:41:19+08:00", "originPublishTime": "2019-11-10T07:00:00+08:00", "createTime": "2019-11-11T15:41:19+08:00" }, { "newsId": 290888, "title": "使用Jmeter进行性能测试实战", "status": 0, "auditTime": null, "originPublishTime": "2018-08-02T17:32:07+08:00", "createTime": "2018-08-02T18:23:34+08:00" }, { "newsId": 292620, "title": "jmeter性能测试实战心法-简单入门", "status": 0, "auditTime": null, "originPublishTime": "2018-08-05T00:02:28+08:00", "createTime": "2018-08-05T01:20:11+08:00" }, { "newsId": 377671, "title": "性能测试工具对比：Jmeter与LoadRunner的异同", "status": 0, "auditTime": null, "originPublishTime": "2018-12-27T17:28:56+08:00", "createTime": "2018-12-27T17:43:37+08:00" }, { "newsId": 19781, "title": "理解XMeter性能测试报告", "status": 0, "auditTime": null, "originPublishTime": "2018-01-19T15:55:56+08:00", "createTime": "2018-01-27T22:30:58+08:00" }, { "newsId": 698674, "title": "如何用Jmeter进行http接口性能测试？全教程来喽！", "status": 0, "auditTime": null, "originPublishTime": "2020-09-24T15:05:06+08:00", "createTime": "2020-09-24T15:20:49+08:00" }, { "newsId": 447677, "title": "使用Jmeter应该如何进行http接口性能测试？", "status": 0, "auditTime": null, "originPublishTime": "2019-09-20T18:00:03+08:00", "createTime": "2019-09-20T18:45:52+08:00" }, { "newsId": 295640, "title": "what？服务器CPU又炸了？", "status": 0, "auditTime": null, "originPublishTime": "2018-08-09T12:39:52+08:00", "createTime": "2018-08-09T13:23:01+08:00" }, { "newsId": 248013, "title": "使用Jmeter进行http接口性能测试", "status": 1, "auditTime": "2018-06-20T10:26:56+08:00", "originPublishTime": "2018-06-19T17:30:35+08:00", "createTime": "2018-06-19T18:24:37+08:00" }], "hasSupportedNews": false, "hasAuditRight": false, "hasRecommendRight": false, "path": "detail", "recPolicyId": 2600, "env": "production", "documentBaseTitle": "腾讯云开发者社区-腾讯云", "cdnDomain": "cloudcache.tencent-cloud.cn", "cssDomain": "cloudcache.tencent-cloud.cn", "qcloudDomain": "cloud.tencent.com", "consoleDomain": "console.cloud.tencent.com", "session": { "isLogined": false, "isQcloudUser": false, "isOwner": false, "nickname": "", "accountInfoCompleted": false, "phoneCompleted": false, "profile": {}, "contactPhoneCompleted": false, "userInfo": {} }, "fromMiniProgram": false, "route": { "url": "/developer/news/241808", "path": "/developer/news/241808", "pathname": "/developer/news/241808", "search": null, "query": {}, "segments": ["developer", "news", "241808"] } });</script>
+    <script
+        class="">                    if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector; if (!Element.prototype.closest) Element.prototype.closest = function (s) { var el = this; if (!document.documentElement.contains(el)) return null; do { if (el.matches(s)) return el; el = el.parentElement; } while (el !== null); return null; }; window.addEventListener('mouseover', function (evt) { const target = evt.target; if (!target) { return; } const aEle = target.closest('a'); if (!aEle) { return; } let href = aEle.getAttribute('href'); if (!href) { return; } href = href.replace(/cloud.tencent.com.cn|cloud.tencent.com|cloud.tencent.cn/g, 'cloud.tencent.com'); aEle.setAttribute('href', href); }, true);</script>
+</body>
+
+</html>
